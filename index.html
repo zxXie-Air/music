@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="renderer" content="webkit">
-    <title>Together Timer with Music</title>
+    <title>Together Timer</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Indie+Flower&family=Pacifico&family=Caveat:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -21,41 +21,91 @@
             transition: background-image 1s ease-in-out;
             position: relative;
         }
-        h1, h2 {
-            color: #FFF; /* White text color */
-            text-align: center;
-        }
-        h1 {
-            font-size: 2em;
-            font-family: 'Great Vibes', cursive;
-        }
         h2 {
             font-size: 2.5em;
             font-family: 'Dancing Script', cursive;
+            color: #FFF; /* White text color */
             margin-bottom: 0.5em;
         }
-        .content, #author-info {
+        #to {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 2em;
+            font-family: 'Caveat', cursive;
+            color: #FFF;
+        }
+        #author-info {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            text-align: right;
+        }
+        #by {
+            font-size: 2em;
+            font-family: 'Caveat', cursive;
+            color: #FFF;
+        }
+        #date {
+            font-size: 1.5em;
+            font-family: 'Caveat', cursive;
+            color: #FFF;
+        }
+        .content {
             text-align: center;
             padding: 0;
         }
         .timer {
             font-size: 3em;
             line-height: 1.5;
+            color: #FFF;
             font-family: 'Pacifico', cursive;
         }
         .timer b {
             color: #FFF; /* White color for the timer numbers */
         }
+        .heart {
+            position: absolute;
+            top: -10px;
+            width: 20px;
+            height: 20px;
+            background: url('https://i.imgur.com/MU2s3YD.png') no-repeat center center;
+            background-size: cover;
+            animation: float 6s ease-in-out infinite, heartbeat 1s ease infinite;
+        }
+        .heart-button {
+            position: absolute;
+            top: 75px; /* Adjust as needed */
+            left:  80px; /* Center it horizontally */
+            transform: translateX(-50%);
+            width: 90px; /* Size of the heart */
+            height: 81px; /* Size of the heart */
+            background-color: red;
+            color: white;
+            border-radius: 50px 50px 0 0;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="%23ffffff" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center;
+            cursor: pointer;
+            outline: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
-    <audio id="bgm" loop controls autoplay>
+    <audio id="bgm" loop>
         <source src="https://zxxie-air.github.io/music/My%20Sunshine-%E5%BC%A0%E6%9D%B0.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
+    <button class="heart-button" onclick="toggleAudio()"></button> <!-- Removed text inside the button -->
 
+    <div id="to">TO: 小泽</div>
+    <div id="author-info">
+        <div id="by">by xzx</div>
+        <div id="date">2024/05/20</div>
+    </div>
     <div class="content">
-        <h1>My Music and Timer Page</h1>
         <h2 id="message">萌萌，我们已经在一起了</h2>
         <div class="timer">
             <b id="d"></b> 天 <b id="h"></b> 小时 <b id="m"></b> 分钟 <b id="s"></b> 秒
@@ -85,6 +135,52 @@
         }
         timer();
         setInterval(timer, 1000);
+
+        function toggleAudio() {
+            var bgm = document.getElementById('bgm');
+            if (bgm.paused) {
+                bgm.play();
+            } else {
+                bgm.pause();
+            }
+        }
+
+        function preloadImages(urls, callback) {
+            let loadedCount = 0;
+            const images = [];
+            urls.forEach(url => {
+                const img = new Image();
+                img.src = url;
+                img.onload = () => {
+                    loadedCount++;
+                    if (loadedCount === urls.length && callback) {
+                        callback(images);
+                    }
+                };
+                img.onerror = () => {
+                    console.error(`Failed to load image: ${url}`);
+                };
+                images.push(img);
+            });
+        }
+
+        function changeBackgroundImage() {
+            const backgrounds = [
+                "https://picsum.photos/1600/900?random=1",
+                "https://picsum.photos/1600/900?random=2",
+                "https://picsum.photos/1600/900?random=3",
+                "https://picsum.photos/1600/900?random=4"
+            ];
+            let currentBackground = 0;
+            preloadImages(backgrounds, () => {
+                setInterval(() => {
+                    currentBackground = (currentBackground + 1) % backgrounds.length;
+                    document.body.style.backgroundImage = 'url(' + backgrounds[currentBackground] + ')';
+                }, 5000);
+            });
+        }
+        changeBackgroundImage();
     </script>
+
 </body>
 </html>
